@@ -1,3 +1,22 @@
+/* Vala Playground Code
+ * Copyright (C) <2011> Terence Haddock <lazerdye@tripi.com>
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ */
+
 using GLib;
 using Gst;
 using Gdk;
@@ -8,6 +27,11 @@ public errordomain CaptureError {
   SNAPSHOT_FAILURE
 }
 
+/**
+ * Creates a snapshot of a frame of video at the specified 'delay' second.
+ * Original source in C:
+ * http://webcvs.freedesktop.org/gstreamer/gst-plugins-base/tests/examples/snapshot/snapshot.c
+ */
 public class StreamCap : GLib.Object {
 
   const OptionEntry[] option_entries = {
@@ -55,8 +79,11 @@ public class StreamCap : GLib.Object {
   }
 
   public static void GetSnapshot(string url, int delay) throws GLib.Error, CaptureError {
-    var cap_string = "video/x-raw-rgb,width=160,pixel-aspect-ratio=1/1,bpp=(int)24,depth=(int)24,endianness=(int)4321,red_mask=(int)0xff0000, green_mask=(int)0x00ff00, blue_mask=(int)0x0000ff";
-    var pipeline_spec = @"uridecodebin uri=$url ! ffmpegcolorspace ! videoscale ! appsink name=sink caps=\"$cap_string\"";
+    var cap_string = "video/x-raw-rgb,width=160,pixel-aspect-ratio=1/1,bpp=(int)24," +
+        "depth=(int)24,endianness=(int)4321,red_mask=(int)0xff0000, green_mask=(int)0x00ff00," +
+        "blue_mask=(int)0x0000ff";
+    var pipeline_spec = @"uridecodebin uri=$url ! ffmpegcolorspace ! videoscale ! " +
+        "appsink name=sink caps=\"$cap_string\"";
     stdout.printf(@"Creating pipeline: $pipeline_spec\n");
     var pipeline = Gst.parse_launch(pipeline_spec);
     Gst.AppSink sink = (Gst.AppSink)((Gst.Bin)pipeline).get_by_name("sink");
