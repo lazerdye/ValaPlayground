@@ -23,11 +23,42 @@ using Lirc;
  * Control the volume using a remote control.
  */
 public class Volume : GLib.Object {
-  public static int main(string[] args) {
-    var res = Lirc.init("irexec", 1);
-    stdout.printf("Res: %d\n", res);
+  public static int testFunc(char* s) {
+    stdout.printf("testFunc: %s\n", (string)s);
+    return 0;
+  }
 
-    // TODO: Well, duh, implement it.
+  public static int main(string[] args) {
+    var res = Lirc.init("volume", 1);
+    stdout.printf("Res 1: %d\n", res);
+    if (res != 0 && res != 3) {
+      stdout.printf("Error 1\n");
+      return 1;
+    }
+
+    Lirc.Config *config = null;
+    res = Lirc.readconfig("lircrc", ref config);
+    if (res != 0) {
+      stdout.printf("Error 2\n");
+      return 1;
+    }
+
+    char *code = null;
+    char *c = null;
+    while (Lirc.nextcode(&code) == 0) {
+      stdout.printf("Code: %s", (string)code);
+      if (code == null) continue;
+      int ret;
+      while ((ret=Lirc.code2char(config, code, &c)) == 0 && c != null)
+      { 
+        stdout.printf("Command \"%s\"\n", (string)c);
+      }
+      free(code);
+      if (ret == -1) break;
+    }
+
+    Lirc.freeconfig(config);
+    Lirc.deinit();
 
     return 0;
   }

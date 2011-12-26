@@ -20,6 +20,20 @@
 [CCode (lower_case_cprefix="lirc_", cprefix="lirc_", cheader_filename="lirc/lirc_client.h")]
 namespace Lirc
 {
+  [CCode (cname="struct lirc_config")]
+  public struct Config {
+    string current_mode;
+    int sockfd;
+  }
+
   static int init(string prog, int verbose);
+  static int deinit();
+  static int readconfig(char *file, ref Config* config, Lirc.CheckFn? check_fn = null);
+  static int freeconfig(Config* config);
+  static int code2char(Config* config, char* code, char **string);
+  static int nextcode(char **code);
+
+  [CCode (has_target = false)]
+  public delegate int CheckFn(char* s);
 }
 

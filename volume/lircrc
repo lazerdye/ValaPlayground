@@ -1,0 +1,7 @@
+
+begin
+  prog = volume
+  button = KEY_MENU
+  config = menu_keyX
+end
+
