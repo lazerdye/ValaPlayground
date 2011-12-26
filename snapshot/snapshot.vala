@@ -32,7 +32,7 @@ public errordomain CaptureError {
  * Original source in C:
  * http://webcvs.freedesktop.org/gstreamer/gst-plugins-base/tests/examples/snapshot/snapshot.c
  */
-public class StreamCap : GLib.Object {
+public class Snapshot : GLib.Object {
 
   const OptionEntry[] option_entries = {
     { "delay", 'd', 0, OptionArg.INT, ref delay, "Delay in seconds", "DELAY" },
